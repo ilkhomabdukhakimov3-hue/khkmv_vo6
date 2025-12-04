@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz</title>
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+
+    /* ФОНОВОЕ ИЗОБРАЖЕНИЕ */
+    background-image: url("https://avatars.mds.yandex.net/i?id=33a08509c3f0da4ebd2fb5a4ac568879_l-9733994-images-thumbs&n=13");
+    background-size: cover;      /* растянуть на весь экран */
+    background-position: center; /* центрировать */
+    background-repeat: no-repeat;
+
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+    .quiz-box {
+        background: #fff;
+        width: 90%;
+        max-width: 450px;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    .option {
+        background: #eceff3;
+        padding: 12px;
+        margin: 8px 0;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .option:hover {
+        background: #dfe4ea;
+    }
+
+    #nextBtn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        display: none;
+    }
+
+    #nextBtn:hover {
+        background: #45a049;
+    }
+</style>
+</head>
+<body>
+
+<div class="quiz-box">
+    <h2 id="question">Вопрос загружается...</h2>
+    <div id="options"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Далее</button>
+</div>
+
+<script>
+    const questions = [
+        { q: "Столица Франции?", answers: ["Париж", "Рим", "Берлин"], correct: 0 },
+        { q: "2 + 2 = ?", answers: ["3", "4", "5"], correct: 1 },
+        { q: "Какой язык используется для создания стилей веб-страниц?", answers: ["HTML", "CSS", "JavaScript"], correct: 1 },
+        { q: "Что означает аббревиатура 'HTTP'?", answers: ["HyperText Transfer Protocol", "HighText Transfer Protocol", "HyperText Transmission Protocol"], correct: 0 },
+        { q: "Какой тег используется для вставки изображения?", answers: ["img", "image", "src"], correct: 0 },
+        { q: "Какой тег делает нумерованный список?", answers: ["ul", "ol", "li"], correct: 1 },
+        { q: "Какой тег создаёт гиперссылку?", answers: ["a", "link", "href"], correct: 0 },
+        { q: "Какой атрибут <img> указывает путь?", answers: ["src", "href", "link"], correct: 0 },
+        { q: "Тег для заголовков?", answers: ["head", "header", "h1 - h6"], correct: 2 },
+        { q: "Какие теги создают гиперссылку?", answers: ["a /a", "link /link", "href /href"], correct: 0 }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        let q = questions[current];
+        document.getElementById("question").innerText = q.q;
+        let opts = "";
+        q.answers.forEach((ans, idx) => {
+            opts += `<div class='option' onclick='selectAnswer(${idx})'>${ans}</div>`;
+        });
+        document.getElementById("options").innerHTML = opts;
+    }
+
+    function selectAnswer(i) {
+        let q = questions[current];
+        let options = document.querySelectorAll(".option");
+
+        options.forEach(opt => opt.style.pointerEvents = "none");
+
+        if (i === q.correct) {
+            score++;
+            options[i].style.background = "#b8e994";
+        } else {
+            options[i].style.background = "#ff7675";
+            options[q.correct].style.background = "#b8e994";
+        }
+
+        document.getElementById("nextBtn").style.display = "block";
+    }
+
+    function nextQuestion() {
+        current++;
+        document.getElementById("nextBtn").style.display = "none";
+
+        if (current >= questions.length) {
+            showResult();
+        } else {
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.querySelector(".quiz-box").innerHTML = `
+            <h2>Готово!</h2>
+            <p>Ваш результат: <b>${score}</b> из <b>${questions.length}</b></p>
+        `;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
